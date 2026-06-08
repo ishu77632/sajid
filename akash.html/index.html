@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Core</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: #00ffcc;
+    font-family: monospace;
+    text-align: center;
+    overflow: hidden;
+}
+
+.shake {
+    animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(2px, 2px); }
+    25% { transform: translate(-2px, -2px); }
+    50% { transform: translate(2px, -2px); }
+    75% { transform: translate(-2px, 2px); }
+    100% { transform: translate(2px, 2px); }
+}
+
+#loginBox {
+    margin-top: 60px;
+}
+
+input {
+    padding: 12px;
+    margin: 10px;
+    width: 80%;
+    font-size: 16px;
+    background: black;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+}
+
+button {
+    padding: 12px 20px;
+    background: #00ffcc;
+    border: none;
+    color: black;
+    font-size: 16px;
+}
+
+#terminal, #progressContainer, #buttons, #scare {
+    display: none;
+}
+
+#terminal {
+    padding: 15px;
+    text-align: left;
+    white-space: pre-line;
+    font-size: 14px;
+}
+
+#progressContainer {
+    width: 90%;
+    margin: auto;
+    background: #111;
+}
+
+#progressBar {
+    width: 0%;
+    height: 15px;
+    background: #00ffcc;
+}
+
+#buttons {
+    margin-top: 20px;
+}
+
+#no {
+    position: absolute;
+    background: red;
+    color: white;
+}
+
+#scare {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: red;
+    font-size: 30px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="loginBox">
+    <h2>🔐 Secure Login</h2>
+    <input type="text" id="userid" placeholder="User ID">
+    <input type="password" id="password" placeholder="Password">
+    <br>
+    <button onclick="login()">LOGIN</button>
+    <p id="error" style="color:red; display:none;">ACCESS DENIED</p>
+</div>
+
+<div id="terminal"></div>
+
+<div id="progressContainer">
+    <div id="progressBar"></div>
+</div>
+
+<div id="buttons">
+    <p>Grant full system control?</p>
+    <button id="yes">YES</button>
+    <button id="no">NO</button>
+</div>
+
+<div id="scare">💀 SYSTEM HACKED 💀</div>
+
+<script>
+const correctID = "SHAJID000";
+const correctPass = "SHAJID";
+
+let beep = new Audio("https://www.soundjay.com/button/beep-07.wav");
+
+// vibration
+function vibrate(p=[200]) {
+    if (navigator.vibrate) navigator.vibrate(p);
+}
+
+// LOGIN
+function login() {
+    let id = document.getElementById("userid").value;
+    let pass = document.getElementById("password").value;
+
+    if (id === correctID && pass === correctPass) {
+        document.getElementById("loginBox").style.display = "none";
+        startSystem();
+    } else {
+        document.getElementById("error").style.display = "block";
+        vibrate([300,100,300]);
+    }
+}
+
+// TERMINAL
+function startSystem() {
+    let terminal = document.getElementById("terminal");
+    terminal.style.display = "block";
+
+    let lines = [
+        "> Booting secure kernel...",
+        "> Connecting to hidden network...",
+        "> Access granted...",
+        "> Extracting data...",
+        "> WARNING: Intrusion detected..."
+    ];
+
+    let i = 0;
+
+    function typeLine() {
+        if (i < lines.length) {
+            terminal.innerHTML += lines[i] + "\n";
+            beep.play().catch(()=>{});
+            i++;
+            setTimeout(typeLine, 700);
+        } else {
+            loadBar();
+        }
+    }
+
+    typeLine();
+}
+
+// LOADING
+function loadBar() {
+    document.getElementById("progressContainer").style.display = "block";
+
+    let bar = document.getElementById("progressBar");
+    let w = 0;
+
+    let int = setInterval(() => {
+        w++;
+        bar.style.width = w + "%";
+
+        if (w >= 100) {
+            clearInterval(int);
+            showButtons();
+        }
+    }, 20);
+}
+
+// SHOW BUTTONS
+function showButtons() {
+    document.getElementById("buttons").style.display = "block";
+}
+
+// ESCAPING NO BUTTON
+document.getElementById("no").addEventListener("touchstart", () => {
+    let x = Math.random() * (window.innerWidth - 100);
+    let y = Math.random() * (window.innerHeight - 50);
+
+    no.style.left = x + "px";
+    no.style.top = y + "px";
+
+    vibrate([100]);
+});
+
+// YES CLICK → GOD MODE
+document.getElementById("yes").addEventListener("click", () => {
+
+    // SHAKE + FLASH
+    document.body.classList.add("shake");
+    document.body.style.background = "red";
+
+    vibrate([500,200,500]);
+
+    setTimeout(() => {
+        document.body.classList.remove("shake");
+        document.body.style.background = "black";
+
+        let scare = document.getElementById("scare");
+        scare.style.display = "flex";
+
+        beep.play().catch(()=>{});
+
+        setTimeout(() => {
+            scare.innerHTML = "😂 RELAX SAJID! IT'S A PRANK 😂";
+        }, 2000);
+
+    }, 1200);
+});
+</script>
+
+</body>
+</html>
